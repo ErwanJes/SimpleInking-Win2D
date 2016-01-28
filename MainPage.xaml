@@ -15,12 +15,21 @@ Licensed under the MIT License. See LICENSE.txt in the project root for license 
     xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+  <ScrollViewer Grid.Row="1"
+                    x:Name="scrollContainer"
+                    ZoomMode="Disabled"
+                    Background="White"
+                    HorizontalScrollMode="Disabled"
+                    VerticalScrollBarVisibility="Auto">
 
-  <Grid>
-    <canvas:CanvasVirtualControl x:Name="canvasRendering" />
-    <canvas:CanvasVirtualControl x:Name="canvasInking" 
+    <Grid Background="White"
+              Holding="Grid_Holding">
+
+      <canvas:CanvasVirtualControl x:Name="canvasRendering"/>
+      <canvas:CanvasVirtualControl x:Name="canvasInking" 
                                  PointerPressed="CanvasControl_PointerPressed"
                                  PointerMoved="CanvasControl_PointerMoved"
                                  PointerReleased="CanvasControl_PointerReleased" />
-  </Grid>
+    </Grid>
+  </ScrollViewer>
 </Page>

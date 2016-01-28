@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Xaml.Controls;
 
 namespace SimpleSample
 {
@@ -21,18 +22,25 @@ namespace SimpleSample
 
   public class Pen
   {
+    private List<Stroke> _previousStrokes;
     public delegate void PenActionHandler(Stroke stroke, bool isTemporary, object context);
     public event PenActionHandler PenDraw;
 
-    public delegate void PenInvalidateHandler(Extent extent, bool isTemporary);
+    public delegate void PenInvalidateHandler(Extent extent);
     public event PenInvalidateHandler PenInvalidated;
 
     private Stroke _stroke { get; set; }
-    private bool _isTemporary;
+
+    public Pen()
+    {
+      _previousStrokes = new List<Stroke>();
+    }
 
     public void PenDown(CaptureInfo captureInfo)
     {
-      _isTemporary = true;
+      if (_stroke != null)
+        _previousStrokes.Add(_stroke);
+
       _stroke = new Stroke();
       _stroke.AddPoint(captureInfo);
     }
@@ -43,23 +51,26 @@ namespace SimpleSample
 
       Extent e = new Extent();
       if (PenInvalidated != null)
-        PenInvalidated(e, _isTemporary);
+        PenInvalidated(e);
     }
 
     public void PenUp(CaptureInfo captureInfo)
     {
-      _isTemporary = false;
       _stroke.AddPoint(captureInfo);
 
       Extent e = new Extent();
       if (PenInvalidated != null)
-        PenInvalidated(e, _isTemporary);
+        PenInvalidated(e);
     }
 
     public void Draw(Extent extent, RenderContext context)
     {
       if (PenDraw != null)
-        PenDraw(_stroke, _isTemporary, context);
+      {
+        foreach (var previousStroke in _previousStrokes)
+          PenDraw(previousStroke, false, context);
+        PenDraw(_stroke, true, context);
+      }
     }
 
   }

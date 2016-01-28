@@ -28,6 +28,8 @@ namespace SimpleSample
     public MainPage()
     {
       this.InitializeComponent();
+      canvasRendering.Height = 10000;
+      canvasInking.Height = 10000;
 
       _activePointerId = POINTER_ID_INACTIVE;
 
@@ -80,6 +82,11 @@ namespace SimpleSample
       }
 
       _activePointerId = POINTER_ID_INACTIVE;
+    }
+
+    private void Grid_Holding(object sender, Windows.UI.Xaml.Input.HoldingRoutedEventArgs e)
+    {
+
     }
   }
 }
